@@ -1,1 +1,1 @@
-export { Dock as default } from './Dock';
+export default from './Dock';
