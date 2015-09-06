@@ -329,7 +329,6 @@ export default class Dock extends Component {
               children({
                 position,
                 isResizing,
-                toggleDockVisible: this.toggleDockVisible,
                 size,
                 isVisible
               }) :
@@ -374,10 +373,6 @@ export default class Dock extends Component {
   }
 
   debouncedUpdateWindowSizeEnd = debounce(this.updateWindowSizeEnd, 30)
-
-  toggleDockVisible = isVisible => {
-    this.setState({ isVisible });
-  }
 
   handleWrapperLeave = () => {
     this.setState({ isResizing: false });
