@@ -1,0 +1,6 @@
+static
+src
+demo
+.*
+server.js
+webpack.config.js
