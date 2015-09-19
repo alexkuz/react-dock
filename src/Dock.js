@@ -2,8 +2,6 @@ import React, { Component, PropTypes } from 'react';
 import radium from 'radium';
 import debounce from 'lodash.debounce';
 
-const raf = window.requestAnimationFrame;
-
 const styles={
   wrapper: {
     position: 'fixed',
@@ -214,8 +212,8 @@ export default class Dock extends Component {
       size: props.size,
       isVisible: props.isVisible,
       isDimHidden: !props.isVisible,
-      fullWidth: window.innerWidth,
-      fullHeight: window.innerHeight,
+      fullWidth: typeof(window) !== 'undefined' && window.innerWidth,
+      fullHeight: typeof(window) !== 'undefined' && window.innerHeight,
       isTransitionStarted: false,
       isWindowResizing: false
     };
@@ -247,6 +245,10 @@ export default class Dock extends Component {
     window.addEventListener('mouseup', this.handleMouseUp);
     window.addEventListener('mousemove', this.handleMouseMove);
     window.addEventListener('resize', this.handleResize);
+
+    if (!window.fullWidth) {
+      this.updateWindowSize();
+    }
   }
 
   componentWillUnpount() {
@@ -347,8 +349,8 @@ export default class Dock extends Component {
   }
 
   handleResize = () => {
-    if (raf) {
-      raf(this.updateWindowSize.bind(this, true));
+    if (window.requestAnimationFrame) {
+      window.requestAnimationFrame(this.updateWindowSize.bind(this, true));
     } else {
       this.updateWindowSize(true);
     }
