@@ -33,7 +33,7 @@ render() {
 | fluid | If `true`, resize dock proportionally on window resize. |
 | size | Size of dock panel (width or height, depending on `position`). Value is a fraction of window width/height, if `fluid` is true, or pixels otherwise |
 | isVisible | If `true`, dock is visible |
-| dimMode | If `none` - content is not dimmed, if `transparent` - pointer events are disabled (so you can click through it), if `opaque` - click on dim area closes the dock. Default is `transparent` |
+| dimMode | If `none` - content is not dimmed, if `transparent` - pointer events are disabled (so you can click through it), if `opaque` - click on dim area closes the dock. Default is `opaque` |
 | duration | Animation duration. Should be synced with transition animation in style properties |
 | dimStyle | Style for dim area |
 | dockStyle | Style for dock |
