@@ -251,7 +251,7 @@ export default class Dock extends Component {
     }
   }
 
-  componentWillUnpount() {
+  componentWillUnmount() {
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('resize', this.handleResize);
