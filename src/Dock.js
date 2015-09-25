@@ -357,14 +357,22 @@ export default class Dock extends Component {
   }
 
   updateWindowSize = (windowResize) => {
-    this.setState({
+    const sizeState = {
       fullWidth: window.innerWidth,
       fullHeight: window.innerHeight,
-      isResizing: true,
-      isWindowResizing: windowResize
-    });
+    };
 
-    this.debouncedUpdateWindowSizeEnd();
+    if (windowResize) {
+      this.setState({
+        ...sizeState,
+        isResizing: true,
+        isWindowResizing: windowResize
+      });
+
+      this.debouncedUpdateWindowSizeEnd();
+    } else {
+      this.setState(sizeState);
+    }
   }
 
   updateWindowSizeEnd = () => {
