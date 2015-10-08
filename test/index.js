@@ -17,7 +17,7 @@ describe('Dock component', function() {
       position: 'left',
       zIndex: 99999999,
       fluid: true,
-      size: 0.3,
+      defaultSize: 0.3,
       dimMode: 'opaque',
       duration: 200
     });

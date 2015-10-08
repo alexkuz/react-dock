@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import radium from 'radium';
 import debounce from 'lodash.debounce';
+import VendorPrefix from 'react-vendor-prefixes';
+import assign from 'object-assign';
 
-const styles={
+const styles = VendorPrefix.prefix({
   wrapper: {
     position: 'fixed',
     width: 0,
@@ -64,7 +65,7 @@ const styles={
     zIndex: 2,
     opacity: 0
   }
-};
+});
 
 function getTransitions(duration) {
   return ['left', 'top', 'width', 'height']
@@ -72,8 +73,8 @@ function getTransitions(duration) {
 }
 
 function getDockStyles(
-  { fluid, dockStyle, dockHiddenStyle, duration },
-  { position, size, isResizing, isVisible, fullWidth, fullHeight }
+  { fluid, dockStyle, dockHiddenStyle, duration, position, isVisible },
+  { size, isResizing, fullWidth, fullHeight }
 ) {
   let posStyle;
   const absSize = fluid ?
@@ -132,8 +133,8 @@ function getDockStyles(
 }
 
 function getDimStyles(
-  { dimMode, dimStyle, duration },
-  { isVisible, isTransitionStarted }
+  { dimMode, dimStyle, duration, isVisible },
+  { isTransitionStarted }
 ) {
   return [
     styles.dim,
@@ -203,14 +204,12 @@ function getFullSize(position, fullWidth, fullHeight) {
     fullHeight;
 }
 
-@radium
 export default class Dock extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      position: props.position,
-      size: props.size,
-      isVisible: props.isVisible,
+      isControlled: typeof props.size !== 'undefined',
+      size: props.size || props.defaultSize,
       isDimHidden: !props.isVisible,
       fullWidth: typeof(window) !== 'undefined' && window.innerWidth,
       fullHeight: typeof(window) !== 'undefined' && window.innerHeight,
@@ -224,9 +223,11 @@ export default class Dock extends Component {
     zIndex: PropTypes.number,
     fluid: PropTypes.bool,
     size: PropTypes.number,
+    defaultSize: PropTypes.number,
     dimMode: PropTypes.oneOf(['none', 'transparent', 'opaque']),
     isVisible: PropTypes.bool,
-    onVisibleChanged: PropTypes.func,
+    onVisibleChange: PropTypes.func,
+    onSizeChange: PropTypes.func,
     dimStyle: PropTypes.object,
     dockStyle: PropTypes.object,
     duration: PropTypes.number
@@ -236,7 +237,7 @@ export default class Dock extends Component {
     position: 'left',
     zIndex: 99999999,
     fluid: true,
-    size: 0.3,
+    defaultSize: 0.3,
     dimMode: 'opaque',
     duration: 200
   }
@@ -251,18 +252,18 @@ export default class Dock extends Component {
     }
   }
 
-  componentWillUnpount() {
+  componentWillUnmount() {
     window.removeEventListener('mouseup', this.handleMouseUp);
     window.removeEventListener('mousemove', this.handleMouseMove);
     window.removeEventListener('resize', this.handleResize);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.position !== nextProps.position) {
-      this.setState({ position: nextProps.position });
-    }
+    const isControlled = typeof nextProps.size !== 'undefined';
 
-    if (this.props.size !== nextProps.size) {
+    this.setState({ isControlled });
+
+    if (isControlled && this.props.size !== nextProps.size) {
       this.setState({ size: nextProps.size });
     } else if (this.props.fluid !== nextProps.fluid) {
       this.updateSize(nextProps);
@@ -270,7 +271,6 @@ export default class Dock extends Component {
 
     if (this.props.isVisible !== nextProps.isVisible) {
       this.setState({
-        isVisible: nextProps.isVisible,
         isTransitionStarted: true
       });
     }
@@ -287,16 +287,14 @@ export default class Dock extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (this.state.isVisible !== prevState.isVisible) {
-      if (!this.state.isVisible) {
+    if (this.props.isVisible !== prevProps.isVisible) {
+      if (!this.props.isVisible) {
         window.setTimeout(() => this.hideDim(), this.props.duration);
       } else {
         this.setState({ isDimHidden: false });
       }
 
       window.setTimeout(() => this.setState({ isTransitionStarted: false }), 0);
-
-      this.props.onVisibleChanged && this.props.onVisibleChanged(this.state.isVisible);
     }
   }
 
@@ -305,21 +303,21 @@ export default class Dock extends Component {
   }
 
   hideDim = () => {
-    if (!this.state.isVisible) {
+    if (!this.props.isVisible) {
       this.setState({ isDimHidden: true });
     }
   }
 
   render() {
-    const { children, zIndex, dimMode } = this.props;
-    const { position, isResizing, size, isVisible, isDimHidden } = this.state;
+    const { children, zIndex, dimMode, position, isVisible } = this.props;
+    const { isResizing, size, isDimHidden } = this.state;
 
-    const dimStyles = getDimStyles(this.props, this.state);
-    const dockStyles = getDockStyles(this.props, this.state);
-    const resizerStyles = getResizerStyles(position);
+    const dimStyles = assign({}, ...getDimStyles(this.props, this.state));
+    const dockStyles = assign({}, ...getDockStyles(this.props, this.state));
+    const resizerStyles = assign({}, ...getResizerStyles(position));
 
     return (
-      <div style={[styles.wrapper, { zIndex }]}>
+      <div style={assign({}, styles.wrapper, { zIndex })}>
         {dimMode !== 'none' && !isDimHidden &&
           <div style={dimStyles} onClick={this.handleDimClick} />
         }
@@ -344,7 +342,7 @@ export default class Dock extends Component {
 
   handleDimClick = () => {
     if (this.props.dimMode === 'opaque') {
-      this.setState({ isVisible: false });
+      this.props.onVisibleChange && this.props.onVisibleChange(false);
     }
   }
 
@@ -357,14 +355,22 @@ export default class Dock extends Component {
   }
 
   updateWindowSize = (windowResize) => {
-    this.setState({
+    const sizeState = {
       fullWidth: window.innerWidth,
       fullHeight: window.innerHeight,
-      isResizing: true,
-      isWindowResizing: windowResize
-    });
+    };
 
-    this.debouncedUpdateWindowSizeEnd();
+    if (windowResize) {
+      this.setState({
+        ...sizeState,
+        isResizing: true,
+        isWindowResizing: windowResize
+      });
+
+      this.debouncedUpdateWindowSizeEnd();
+    } else {
+      this.setState(sizeState);
+    }
   }
 
   updateWindowSizeEnd = () => {
@@ -393,22 +399,29 @@ export default class Dock extends Component {
     e.preventDefault();
 
     const { position, fluid } = this.props;
-    const { fullWidth, fullHeight } = this.state;
+    const { fullWidth, fullHeight, isControlled } = this.state;
     const { clientX: x, clientY: y } = e;
+    let size;
 
     switch(position) {
     case 'left':
-      this.setState({ size: fluid ? x / fullWidth : x });
+      size = fluid ? x / fullWidth : x;
       break;
     case 'right':
-      this.setState({ size: fluid ? (fullWidth - x) / fullWidth : (fullWidth - x) });
+      size = fluid ? (fullWidth - x) / fullWidth : (fullWidth - x);
       break;
     case 'top':
-      this.setState({ size: fluid ? y / fullHeight : y });
+      size = fluid ? y / fullHeight : y;
       break;
     case 'bottom':
-      this.setState({ size: fluid ? (fullHeight - y) / fullHeight : (fullHeight - y) });
+      size = fluid ? (fullHeight - y) / fullHeight : (fullHeight - y);
       break;
+    }
+
+    this.props.onSizeChange && this.props.onSizeChange(size);
+
+    if (!isControlled) {
+      this.setState({ size });
     }
   }
 }
