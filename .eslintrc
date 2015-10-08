@@ -18,7 +18,7 @@
     "indent": [1, 2],
     "quotes": [1, "single", "avoid-escape"],
     "curly": [0],
-    "jsx-quotes": 1,
+    "jsx-quotes": [1, "prefer-single"],
 
     "react/jsx-boolean-value": 1,
     "react/jsx-no-undef": 2,

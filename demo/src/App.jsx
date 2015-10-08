@@ -51,7 +51,8 @@ export default class App extends Component {
       isVisible: true,
       fluid: true,
       customAnimation: false,
-      slow: false
+      slow: false,
+      size: 0.25
     };
   }
 
@@ -108,9 +109,11 @@ export default class App extends Component {
           </div>
         </div>
         <Dock position={positions[this.state.positionIdx]}
+              size={this.state.size}
               dimMode={dimModes[this.state.dimModeIdx]}
               isVisible={this.state.isVisible}
-              onVisibleChanged={this.handleVisibleChanged}
+              onVisibleChange={this.handleVisibleChange}
+              onSizeChange={this.handleSizeChange}
               fluid={this.state.fluid}
               dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
               dockStyle={this.state.customAnimation ? { transition: transitions } : null}
@@ -133,8 +136,12 @@ export default class App extends Component {
     );
   }
 
-  handleVisibleChanged = isVisible => {
+  handleVisibleChange = isVisible => {
     this.setState({ isVisible });
+  }
+
+  handleSizeChange = size => {
+    this.setState({ size });
   }
 
   handlePositionClick = () => {
