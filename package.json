@@ -58,6 +58,6 @@
   "dependencies": {
     "lodash.debounce": "^3.1.1",
     "object-assign": "^4.0.1",
-    "react-vendor-prefix": "0.0.1"
+    "react-vendor-prefixes": "0.0.2"
   }
 }

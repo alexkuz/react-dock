@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import debounce from 'lodash.debounce';
-import VendorPrefix from 'react-vendor-prefix';
+import VendorPrefix from 'react-vendor-prefixes';
 import assign from 'object-assign';
 
 const styles = VendorPrefix.prefix({
