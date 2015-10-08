@@ -319,7 +319,7 @@ export default class Dock extends Component {
     const resizerStyles = assign({}, ...getResizerStyles(position));
 
     return (
-      <div style={[styles.wrapper, { zIndex }]}>
+      <div style={assign({}, styles.wrapper, { zIndex })}>
         {dimMode !== 'none' && !isDimHidden &&
           <div style={dimStyles} onClick={this.handleDimClick} />
         }
