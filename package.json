@@ -1,6 +1,6 @@
 {
   "name": "react-dock",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Resizable dockable react component",
   "scripts": {
     "build-lib": "./node_modules/.bin/babel src --out-dir lib",
