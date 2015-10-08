@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import radium from 'radium';
 import debounce from 'lodash.debounce';
+import VendorPrefix from 'react-vendor-prefix';
+import assign from 'object-assign';
 
-const styles={
+const styles = VendorPrefix.prefix({
   wrapper: {
     position: 'fixed',
     width: 0,
@@ -64,7 +65,7 @@ const styles={
     zIndex: 2,
     opacity: 0
   }
-};
+});
 
 function getTransitions(duration) {
   return ['left', 'top', 'width', 'height']
@@ -203,7 +204,6 @@ function getFullSize(position, fullWidth, fullHeight) {
     fullHeight;
 }
 
-@radium
 export default class Dock extends Component {
   constructor(props) {
     super(props);
@@ -314,9 +314,9 @@ export default class Dock extends Component {
     const { children, zIndex, dimMode } = this.props;
     const { position, isResizing, size, isVisible, isDimHidden } = this.state;
 
-    const dimStyles = getDimStyles(this.props, this.state);
-    const dockStyles = getDockStyles(this.props, this.state);
-    const resizerStyles = getResizerStyles(position);
+    const dimStyles = assign({}, ...getDimStyles(this.props, this.state));
+    const dockStyles = assign({}, ...getDockStyles(this.props, this.state));
+    const resizerStyles = assign({}, ...getResizerStyles(position));
 
     return (
       <div style={[styles.wrapper, { zIndex }]}>
