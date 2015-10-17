@@ -3,6 +3,10 @@ import debounce from 'lodash.debounce';
 import VendorPrefix from 'react-vendor-prefixes';
 import assign from 'object-assign';
 
+function prefixRule(style) {
+  return VendorPrefix.prefix({ style }).style;
+}
+
 const styles = VendorPrefix.prefix({
   wrapper: {
     position: 'fixed',
@@ -118,14 +122,14 @@ function getDockStyles(
 
   return [
     styles.dock,
-    {
+    prefixRule({
       transition: [
         ...transitions,
         !isVisible && `opacity 0.01s linear ${duration/1000}s`
-      ].join(',')
-    },
+      ].filter(t => t).join(',')
+    }),
     dockStyle,
-    posStyle,
+    prefixRule(posStyle),
     isResizing && styles.dockResizing,
     !isVisible && styles.dockHidden,
     !isVisible && dockHiddenStyle,
@@ -138,9 +142,9 @@ function getDimStyles(
 ) {
   return [
     styles.dim,
-    {
+    prefixRule({
       transition: `opacity ${duration / 1000}s ease-out`,
-    },
+    }),
     dimStyle,
     dimMode === 'transparent' && styles.dimTransparent,
     !isVisible && styles.dimHidden,
@@ -194,7 +198,7 @@ function getResizerStyles(position) {
 
   return [
     styles.resizer,
-    resizerStyle
+    prefixRule(resizerStyle)
   ];
 }
 
@@ -286,7 +290,7 @@ export default class Dock extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.isVisible !== prevProps.isVisible) {
       if (!this.props.isVisible) {
         window.setTimeout(() => this.hideDim(), this.props.duration);
