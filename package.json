@@ -1,6 +1,6 @@
 {
   "name": "react-dock",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Resizable dockable react component",
   "scripts": {
     "build-lib": "./node_modules/.bin/babel src --out-dir lib",
@@ -57,7 +57,6 @@
   },
   "dependencies": {
     "lodash.debounce": "^3.1.1",
-    "object-assign": "^4.0.1",
-    "react-vendor-prefixes": "0.0.2"
+    "object-assign": "^4.0.1"
   }
 }

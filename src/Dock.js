@@ -1,9 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import debounce from 'lodash.debounce';
-import VendorPrefix from 'react-vendor-prefixes';
 import assign from 'object-assign';
+import autoprefix from './autoprefix';
 
-const styles = VendorPrefix.prefix({
+function autoprefixes(styles) {
+  return Object.keys(styles).reduce(
+    (obj, key) => (obj[key] = autoprefix(styles[key]), obj),
+    {}
+  );
+}
+
+const styles = autoprefixes({
   wrapper: {
     position: 'fixed',
     width: 0,
@@ -118,14 +125,14 @@ function getDockStyles(
 
   return [
     styles.dock,
-    {
+    autoprefix({
       transition: [
         ...transitions,
         !isVisible && `opacity 0.01s linear ${duration/1000}s`
-      ].join(',')
-    },
+      ].filter(t => t).join(',')
+    }),
     dockStyle,
-    posStyle,
+    autoprefix(posStyle),
     isResizing && styles.dockResizing,
     !isVisible && styles.dockHidden,
     !isVisible && dockHiddenStyle,
@@ -138,9 +145,9 @@ function getDimStyles(
 ) {
   return [
     styles.dim,
-    {
+    autoprefix({
       transition: `opacity ${duration / 1000}s ease-out`,
-    },
+    }),
     dimStyle,
     dimMode === 'transparent' && styles.dimTransparent,
     !isVisible && styles.dimHidden,
@@ -194,7 +201,7 @@ function getResizerStyles(position) {
 
   return [
     styles.resizer,
-    resizerStyle
+    autoprefix(resizerStyle)
   ];
 }
 
@@ -286,7 +293,7 @@ export default class Dock extends Component {
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.isVisible !== prevProps.isVisible) {
       if (!this.props.isVisible) {
         window.setTimeout(() => this.hideDim(), this.props.duration);
