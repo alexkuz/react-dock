@@ -1,13 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import debounce from 'lodash.debounce';
-import VendorPrefix from 'react-vendor-prefixes';
 import assign from 'object-assign';
+import autoprefix from './autoprefix';
 
-function prefixRule(style) {
-  return VendorPrefix.prefix({ style }).style;
+function autoprefixes(styles) {
+  return Object.keys(styles).reduce(
+    (obj, key) => (obj[key] = autoprefix(styles[key]), obj),
+    {}
+  );
 }
 
-const styles = VendorPrefix.prefix({
+const styles = autoprefixes({
   wrapper: {
     position: 'fixed',
     width: 0,
@@ -122,14 +125,14 @@ function getDockStyles(
 
   return [
     styles.dock,
-    prefixRule({
+    autoprefix({
       transition: [
         ...transitions,
         !isVisible && `opacity 0.01s linear ${duration/1000}s`
       ].filter(t => t).join(',')
     }),
     dockStyle,
-    prefixRule(posStyle),
+    autoprefix(posStyle),
     isResizing && styles.dockResizing,
     !isVisible && styles.dockHidden,
     !isVisible && dockHiddenStyle,
@@ -142,7 +145,7 @@ function getDimStyles(
 ) {
   return [
     styles.dim,
-    prefixRule({
+    autoprefix({
       transition: `opacity ${duration / 1000}s ease-out`,
     }),
     dimStyle,
@@ -198,7 +201,7 @@ function getResizerStyles(position) {
 
   return [
     styles.resizer,
-    prefixRule(resizerStyle)
+    autoprefix(resizerStyle)
   ];
 }
 
