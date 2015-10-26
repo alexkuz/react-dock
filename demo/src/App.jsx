@@ -10,7 +10,6 @@ const styles = {
   root: {
     fontSize: '16px',
     color: '#999',
-    width: '100vw',
     height: '100vh'
   },
   main: {
