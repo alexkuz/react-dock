@@ -45,6 +45,7 @@
     "imports-loader": "^0.6.4",
     "json-loader": "^0.5.2",
     "mocha": "^2.3.2",
+    "radium": "^0.14.3",
     "raw-loader": "^0.5.1",
     "react-bootstrap": "^0.24.2",
     "react-hot-loader": "^1.2.8",
