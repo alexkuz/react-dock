@@ -3,16 +3,16 @@
   "version": "0.2.3",
   "description": "Resizable dockable react component",
   "scripts": {
-    "build-lib": "./node_modules/.bin/babel src --out-dir lib",
-    "build-demo": "NODE_ENV=production ./node_modules/.bin/webpack -p",
-    "stats": "./node_modules/.bin/webpack --profile --json > stats.json",
-    "start": "./node_modules/.bin/webpack-dev-server",
-    "lint": "./node_modules/.bin/eslint src",
+    "build-lib": "babel src --out-dir lib",
+    "build-demo": "NODE_ENV=production webpack -p",
+    "stats": "webpack --profile --json > stats.json",
+    "start": "webpack-dev-server",
+    "lint": "eslint src",
     "preversion": "npm run lint && npm test",
     "version": "npm run build-demo && git add -A .",
     "postversion": "git push",
     "prepublish": "npm run build-lib",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-core/register"
+    "test": "mocha --compilers js:babel-core/register"
   },
   "main": "lib/index.js",
   "repository": {
