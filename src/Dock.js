@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from 'react';
 import debounce from 'lodash.debounce';
-import assign from 'object-assign';
 import autoprefix from './autoprefix';
 
 function autoprefixes(styles) {
@@ -319,12 +318,12 @@ export default class Dock extends Component {
     const { children, zIndex, dimMode, position, isVisible } = this.props;
     const { isResizing, size, isDimHidden } = this.state;
 
-    const dimStyles = assign({}, ...getDimStyles(this.props, this.state));
-    const dockStyles = assign({}, ...getDockStyles(this.props, this.state));
-    const resizerStyles = assign({}, ...getResizerStyles(position));
+    const dimStyles = Object.assign({}, ...getDimStyles(this.props, this.state));
+    const dockStyles = Object.assign({}, ...getDockStyles(this.props, this.state));
+    const resizerStyles = Object.assign({}, ...getResizerStyles(position));
 
     return (
-      <div style={assign({}, styles.wrapper, { zIndex })}>
+      <div style={Object.assign({}, styles.wrapper, { zIndex })}>
         {dimMode !== 'none' && !isDimHidden &&
           <div style={dimStyles} onClick={this.handleDimClick} />
         }
