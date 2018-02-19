@@ -131,8 +131,8 @@ function getDockStyles(
         !isVisible && `opacity 0.01s linear ${duration/1000}s`
       ].filter(t => t).join(',')
     }),
-    dockStyle,
     autoprefix(posStyle),
+    autoprefix(dockStyle || {}),
     isResizing && styles.dockResizing,
     !isVisible && styles.dockHidden,
     !isVisible && dockHiddenStyle,
@@ -148,7 +148,7 @@ function getDimStyles(
     autoprefix({
       transition: `opacity ${duration / 1000}s ease-out`,
     }),
-    dimStyle,
+    autoprefix(dimStyle || {}),
     dimMode === 'transparent' && styles.dimTransparent,
     !isVisible && styles.dimHidden,
     isTransitionStarted && isVisible && styles.dimAppear,
