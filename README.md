@@ -37,7 +37,9 @@ render() {
 | dimMode | If `none` - content is not dimmed, if `transparent` - pointer events are disabled (so you can click through it), if `opaque` - click on dim area closes the dock. Default is `opaque` |
 | duration | Animation duration. Should be synced with transition animation in style properties |
 | dimStyle | Style for dim area |
-| dockStyle | Style for dock |
+| dimClasses | Array of class names for dim area. **Keep in mind that inline styles have higher priority on external styles.** |
+| dockStyle | Style for dock |	
+| dockClasses | Array of class names for dock. **Keep in mind that inline styles have higher priority on external styles.** |
 | zIndex | Z-index for wrapper |
 | onVisibleChange | Fires when `Dock` wants to change `isVisible` (when opaque dim is clicked, in particular) |
 | onSizeChange | Fires when `Dock` wants to change `size` |
