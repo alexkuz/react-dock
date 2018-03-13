@@ -131,8 +131,8 @@ function getDockStyles(
         !isVisible && `opacity 0.01s linear ${duration/1000}s`
       ].filter(t => t).join(',')
     }),
-    dockStyle,
     autoprefix(posStyle),
+    autoprefix(dockStyle || {}),
     isResizing && styles.dockResizing,
     !isVisible && styles.dockHidden,
     !isVisible && dockHiddenStyle,
@@ -148,7 +148,7 @@ function getDimStyles(
     autoprefix({
       transition: `opacity ${duration / 1000}s ease-out`,
     }),
-    dimStyle,
+    autoprefix(dimStyle || {}),
     dimMode === 'transparent' && styles.dimTransparent,
     !isVisible && styles.dimHidden,
     isTransitionStarted && isVisible && styles.dimAppear,
@@ -236,7 +236,9 @@ export default class Dock extends Component {
     onVisibleChange: PropTypes.func,
     onSizeChange: PropTypes.func,
     dimStyle: PropTypes.object,
+    dimClasses: PropTypes.array,
     dockStyle: PropTypes.object,
+    dockClasses: PropTypes.array,
     duration: PropTypes.number
   }
 
@@ -320,15 +322,17 @@ export default class Dock extends Component {
     const { isResizing, size, isDimHidden } = this.state;
 
     const dimStyles = Object.assign({}, ...getDimStyles(this.props, this.state));
+    const dimClasses = this.props.dimClasses ? this.props.dimClasses.join(' ') : '';
     const dockStyles = Object.assign({}, ...getDockStyles(this.props, this.state));
+    const dockClasses = this.props.dockClasses ? this.props.dockClasses.join(' ') : '';
     const resizerStyles = Object.assign({}, ...getResizerStyles(position));
 
     return (
       <div style={Object.assign({}, styles.wrapper, { zIndex })}>
         {dimMode !== 'none' && !isDimHidden &&
-          <div style={dimStyles} onClick={this.handleDimClick} />
+          <div className={dimClasses} style={dimStyles} onClick={this.handleDimClick} />
         }
-        <div style={dockStyles}>
+        <div className={dockClasses} style={dockStyles}>
           <div style={resizerStyles}
                onMouseDown={this.handleMouseDown} />
           <div style={styles.dockContent}>
