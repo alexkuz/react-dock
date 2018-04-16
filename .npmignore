@@ -4,3 +4,4 @@ demo
 .*
 server.js
 webpack.config.js
+yarn-error.log
