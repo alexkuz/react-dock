@@ -232,6 +232,7 @@ export default class Dock extends Component {
     defaultSize: PropTypes.number,
     dimMode: PropTypes.oneOf(['none', 'transparent', 'opaque']),
     isVisible: PropTypes.bool,
+    isResizable: PropTypes.bool,
     onVisibleChange: PropTypes.func,
     onSizeChange: PropTypes.func,
     dimStyle: PropTypes.object,
@@ -245,7 +246,8 @@ export default class Dock extends Component {
     fluid: true,
     defaultSize: 0.3,
     dimMode: 'opaque',
-    duration: 200
+    duration: 200,
+    isResizable: true
   }
 
   componentDidMount() {
@@ -315,7 +317,7 @@ export default class Dock extends Component {
   }
 
   render() {
-    const { children, zIndex, dimMode, position, isVisible } = this.props;
+    const { children, zIndex, dimMode, position, isVisible, isResizable } = this.props;
     const { isResizing, size, isDimHidden } = this.state;
 
     const dimStyles = Object.assign({}, ...getDimStyles(this.props, this.state));
@@ -328,8 +330,12 @@ export default class Dock extends Component {
           <div style={dimStyles} onClick={this.handleDimClick} />
         }
         <div style={dockStyles}>
-          <div style={resizerStyles}
-               onMouseDown={this.handleMouseDown} />
+          {isResizable &&
+            <div
+              style={resizerStyles}
+              onMouseDown={this.handleMouseDown}
+            />
+          }
           <div style={styles.dockContent}>
             {typeof children === 'function' ?
               children({

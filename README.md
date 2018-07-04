@@ -34,6 +34,7 @@ render() {
 | size | Size of dock panel (width or height, depending on `position`). If this prop is set, `Dock` is considered as a controlled component, so you need to use `onSizeChange` to track dock resizing. Value is a fraction of window width/height, if `fluid` is true, or pixels otherwise |
 | defaultSize | Default size of dock panel (used for uncontrolled `Dock` component) |
 | isVisible | If `true`, dock is visible |
+| isResizable | If `false`, then resizing is disabled |
 | dimMode | If `none` - content is not dimmed, if `transparent` - pointer events are disabled (so you can click through it), if `opaque` - click on dim area closes the dock. Default is `opaque` |
 | duration | Animation duration. Should be synced with transition animation in style properties |
 | dimStyle | Style for dim area |
