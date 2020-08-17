@@ -1,3 +1,7 @@
+<table><tr></tr><tr><td><h3>🏚</h3></td><td><b>This package was merged into <a href="https://github.com/reduxjs/redux-devtools"><code>redux-devtools</code> monorepo</pre></a>. Please refer to that repository for the latest updates, issues and pull requests.</b></td></tr></table>
+
+---
+
 # react-dock
 
 Resizable dockable react component.
