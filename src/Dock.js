@@ -316,7 +316,7 @@ export default class Dock extends Component {
   }
 
   render() {
-    const { children, zIndex, dimMode, position, isVisible } = this.props;
+    const { children, zIndex, dimMode, position, isVisible, isControlled } = this.props;
     const { isResizing, size, isDimHidden } = this.state;
 
     const dimStyles = Object.assign({}, ...getDimStyles(this.props, this.state));
@@ -329,8 +329,9 @@ export default class Dock extends Component {
           <div style={dimStyles} onClick={this.handleDimClick} />
         }
         <div style={dockStyles}>
-          <div style={resizerStyles}
-               onMouseDown={this.handleMouseDown} />
+          {isControlled &&
+            <div style={resizerStyles} onMouseDown={this.handleMouseDown} />
+          }
           <div style={styles.dockContent}>
             {typeof children === 'function' ?
               children({
@@ -427,7 +428,7 @@ export default class Dock extends Component {
 
     this.props.onSizeChange && this.props.onSizeChange(size);
 
-    if (!isControlled) {
+    if (isControlled) {
       this.setState({ size });
     }
   }
