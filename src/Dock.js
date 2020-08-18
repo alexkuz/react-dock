@@ -395,10 +395,12 @@ export default class Dock extends Component {
 
   handleMouseDown = () => {
     this.setState({ isResizing: true });
+    document.body.style.MozUserSelect = 'none';
   }
 
   handleMouseUp = () => {
     this.setState({ isResizing: false });
+    document.body.style.MozUserSelect = 'auto';
   }
 
   handleMouseMove = e => {
